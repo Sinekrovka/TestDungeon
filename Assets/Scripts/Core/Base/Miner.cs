@@ -8,6 +8,7 @@ public class Miner : MonoBehaviour, IUnit
     [SerializeField] private GameObject _healthBar;
     private HealthIndicator _health;
     private SkeletonAnimation _animationScript;
+    private Vector3 startPosition;
 
     private void Awake()
     {
@@ -18,6 +19,7 @@ public class Miner : MonoBehaviour, IUnit
         _health.SetStartHp(_HP);
         _health.SetFollowingObject(transform);
         _animationScript = GetComponentInChildren<SkeletonAnimation>();
+        startPosition = transform.position;
     }
     
     private void OnMouseDown()
