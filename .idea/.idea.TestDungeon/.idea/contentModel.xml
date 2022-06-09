@@ -12,15 +12,12 @@
           </e>
         </e>
         <e p="Scripts" t="Include">
-          <e p="Components" t="Include">
-            <e p="Warriors" t="Include">
-              <e p="BaseWarrior.cs" t="Include" />
-              <e p="EliteWarrior.cs" t="Include" />
-            </e>
-          </e>
           <e p="Core" t="Include">
             <e p="Base" t="Include">
               <e p="Warrior.cs" t="Include" />
+            </e>
+            <e p="Controllers" t="Include">
+              <e p="ActionController.cs" t="Include" />
             </e>
             <e p="Interfaces" t="Include">
               <e p="IUnit.cs" t="Include" />

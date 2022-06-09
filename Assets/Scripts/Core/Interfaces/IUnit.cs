@@ -1,6 +1,6 @@
 public interface IUnit
 {
-    void Damage();
-    void HP();
-    void Attack();
+    void Damage(int damage);
+    void Attack(IUnit aim);
+
 }
