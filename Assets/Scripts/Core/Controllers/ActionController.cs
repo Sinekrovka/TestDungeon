@@ -25,6 +25,18 @@ public class ActionController : MonoBehaviour
 
     public void AttackAction()
     {
+        CheckSelected();
+        _tagetWarrior.Attack(_currentAim);
+    }
+
+    public void Next()
+    {
+        CheckSelected();
+        _currentAim.Attack(_tagetWarrior);
+    }
+
+    private void CheckSelected()
+    {
         if (_tagetWarrior == null)
         {
             GameObject[] findedObjects = GameObject.FindGameObjectsWithTag("Player");
@@ -38,7 +50,5 @@ public class ActionController : MonoBehaviour
             int index = Random.Range(0, findedObjects.Length);
             findedObjects[index].TryGetComponent(out _currentAim);
         }
-        
-        _tagetWarrior.Attack(_currentAim);
     }
 }
