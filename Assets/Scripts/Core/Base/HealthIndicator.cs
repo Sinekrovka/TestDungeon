@@ -1,26 +1,26 @@
 using DG.Tweening;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class HealthIndicator:MonoBehaviour
 {
     private int _startHP;
-    private float _lenght;
     private Transform _following;
     private RectTransform _baseObject;
-    private RectTransform _healtBar;
+    private Image _healtBar;
     private Camera _mainCamera;
 
     private void Awake()
     {
-        _healtBar = GetComponent<RectTransform>();
-        _baseObject = _healtBar.parent.GetComponent<RectTransform>();
-        _lenght = _healtBar.sizeDelta.x;
+        _healtBar = GetComponent<Image>();
+        _baseObject = _healtBar.transform.parent.GetComponent<RectTransform>();
         _mainCamera = Camera.main;
     }
 
-    public void SetStartHp(int hp)
+    public void SetStartParams(int hp, Color color)
     {
         _startHP = hp;
+        _healtBar.color = color;
     }
 
     public void SetFollowingObject(Transform following)
@@ -36,6 +36,6 @@ public class HealthIndicator:MonoBehaviour
 
     public void GiveDamage(int damage)
     {
-        _healtBar.DOSizeDelta(new Vector2(_lenght * (damage / _startHP), _healtBar.sizeDelta.y), 0.5f);
+        _healtBar.DOFillAmount((damage*1f / _startHP), 0.5f);
     }
 }

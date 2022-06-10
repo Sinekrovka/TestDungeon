@@ -1,8 +1,10 @@
+using System.Collections;
 using DG.Tweening;
 using UnityEngine;
 
 public class ActionController : MonoBehaviour
 {
+    [SerializeField] private float timeBetweenSteps;
     private IUnit _tagetWarrior;
     private IUnit _currentAim;
     private bool _attack;
@@ -10,11 +12,15 @@ public class ActionController : MonoBehaviour
 
     private Transform _warrior;
     private Transform _victim;
+    private bool botStep;
 
     private void Awake()
     {
         Instance = this;
         _attack = false;
+        StepController.GenerateFirstStep();
+        botStep = !StepController.Step;
+        FindObjectOfType<UIController>().CheckUIButtonStatus(StepController.Step);
     }
 
     public void SetAim(GameObject targetWarrior)
@@ -31,19 +37,29 @@ public class ActionController : MonoBehaviour
 
     public void AttackAction()
     {
-        CheckSelected();
-        Moving(_tagetWarrior, _currentAim);
+        if (StepController.Step)
+        {
+            CheckSelected();
+            botStep = true;
+            MovingSelectedWarriors.Moving(_warrior, _victim);
+            _warrior = null;
+            _victim = null;
+        }
     }
 
     public void Next()
     {
-        CheckSelected();
-        Moving(_currentAim, _tagetWarrior);
+        if (StepController.Step)
+        {
+            StepController.Step = false;
+            StartCoroutine(EnemyStep(0));
+        }
     }
+    
 
     private void CheckSelected()
     {
-        if (_tagetWarrior == null)
+        if (_warrior == null)
         {
             GameObject[] findedObjects = GameObject.FindGameObjectsWithTag("Player");
             int index = Random.Range(0, findedObjects.Length);
@@ -51,7 +67,7 @@ public class ActionController : MonoBehaviour
             _warrior = findedObjects[index].transform;
         }
 
-        if (_currentAim == null)
+        if (_victim == null)
         {
             GameObject[] findedObjects = GameObject.FindGameObjectsWithTag("Enemy");
             int index = Random.Range(0, findedObjects.Length);
@@ -60,9 +76,25 @@ public class ActionController : MonoBehaviour
         }
     }
 
-    private void Moving(IUnit warrior, IUnit victim)
+    private void Update()
     {
-        _victim.DOMoveX(0.1f, 0.5f);
-        _warrior.DOMoveX(-0.1f, 0.5f).OnComplete(delegate { warrior.Attack(victim); });
+        if (!StepController.Step && botStep)
+        {
+            botStep = false;
+            StartCoroutine(EnemyStep(timeBetweenSteps));
+        }
+        
+        Debug.Log(StepController.Step);
+    }
+
+    private IEnumerator EnemyStep(float time)
+    {
+        _tagetWarrior = null;
+        _currentAim = null;
+        yield return new WaitForSeconds(time);
+        CheckSelected();
+        MovingSelectedWarriors.Moving(_victim, _warrior);
+        _warrior = null;
+        _victim = null;
     }
 }

@@ -37,6 +37,9 @@
             </e>
             <e p="Controllers" t="Include">
               <e p="ActionController.cs" t="Include" />
+              <e p="MovingSelectedWarriors.cs" t="Include" />
+              <e p="StepController.cs" t="Include" />
+              <e p="UIController.cs" t="Include" />
             </e>
             <e p="Interfaces" t="Include">
               <e p="IUnit.cs" t="Include" />
