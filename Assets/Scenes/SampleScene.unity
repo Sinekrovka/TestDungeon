@@ -2866,6 +2866,14 @@ PrefabInstance:
       propertyPath: m_Name
       value: BaseMiner
       objectReference: {fileID: 0}
+    - target: {fileID: 5376867170913783865, guid: a80b137c45065c74fba43bddb2a70d8c, type: 3}
+      propertyPath: separatorSlotNames.Array.size
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5376867170913783865, guid: a80b137c45065c74fba43bddb2a70d8c, type: 3}
+      propertyPath: separatorSlotNames.Array.data[0]
+      value: Body
+      objectReference: {fileID: 0}
     - target: {fileID: 5376867170913783866, guid: a80b137c45065c74fba43bddb2a70d8c, type: 3}
       propertyPath: m_RootOrder
       value: 0
