@@ -6,5 +6,6 @@ public interface IUnit
     void Attack(Transform aim);
     void ChangeAnimation(string animationName);
     float StartPosition();
+    void DeselectUnit();
 
 }

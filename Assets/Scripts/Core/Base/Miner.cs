@@ -1,34 +1,19 @@
 using Spine.Unity;
 using UnityEngine;
 
-public class Miner : MonoBehaviour, IUnit
+public class Miner : Warrior, IUnit
 {
     [SerializeField] private int _maxDamage;
     [SerializeField] private int _HP;
-    [SerializeField] private GameObject _healthBar;
-    private HealthIndicator _health;
+   
     private SkeletonAnimation _animationScript;
     private float startPosition;
 
     private void Awake()
     {
-        _health = GetComponentInChildren<HealthIndicator>();
-        Canvas canvas = FindObjectOfType<Canvas>();
-        _healthBar = Instantiate(_healthBar, canvas.transform);
-        _health = _healthBar.transform.GetComponentInChildren<HealthIndicator>();
-        Color color;
-        if (transform.CompareTag("Player"))
-        {
-            color = new Color(0.15f,0.9f, 0.1f);
-        }
-        else
-        {
-            color = new Color(0.9f, 0.2f, 0.1f);
-        }
-        _health.SetStartParams(_HP, color);
-        _health.SetFollowingObject(transform);
         _animationScript = GetComponentInChildren<SkeletonAnimation>();
         startPosition = transform.position.x;
+        HealthIndicatorInit(_HP);
     }
     
     private void OnMouseDown()
@@ -41,10 +26,12 @@ public class Miner : MonoBehaviour, IUnit
         {
             ActionController.Instance.SetAim(gameObject);
         }
+        ShowSelected();
     }
     
     public void Attack(Transform aim)
     {
+        HideSelected();
         IUnit aimInterface = aim.GetComponent<IUnit>();
         aimInterface.Damage(Random.Range(0, _maxDamage));
         ChangeAnimation("PickaxeCharge");
@@ -55,12 +42,14 @@ public class Miner : MonoBehaviour, IUnit
 
     public void Damage(int damage)
     {
+        HideSelected();
         if (damage.Equals(0))
         {
-            /*уклонение*/
+            ShowDamage("УКЛОНЕНИЕ");
         }
         else
         {
+            ShowDamage(damage.ToString());
             _HP -= damage;
             if (_HP <= 0)
             {
@@ -70,10 +59,8 @@ public class Miner : MonoBehaviour, IUnit
             {
                 ChangeAnimation("Damage");
             }
-            _health.GiveDamage(_HP);
+            GetDamage(_HP);
         }
-        
-        
     }
 
     private void Death()
@@ -81,6 +68,7 @@ public class Miner : MonoBehaviour, IUnit
         _HP = 0;
         transform.tag = "DeadBody";
         ChangeAnimation("Pull");
+        DeadBody();
     }
 
     public void ChangeAnimation(string animationName)
@@ -91,5 +79,10 @@ public class Miner : MonoBehaviour, IUnit
     public float StartPosition()
     {
         return startPosition;
+    }
+
+    public void DeselectUnit()
+    {
+        HideSelected();
     }
 }

@@ -1,12 +1,9 @@
 using System.Collections;
-using DG.Tweening;
 using UnityEngine;
 
 public class ActionController : MonoBehaviour
 {
     [SerializeField] private float timeBetweenSteps;
-    private IUnit _tagetWarrior;
-    private IUnit _currentAim;
     private bool _attack;
     public static ActionController Instance;
 
@@ -23,16 +20,22 @@ public class ActionController : MonoBehaviour
         FindObjectOfType<UIController>().CheckUIButtonStatus(StepController.Step);
     }
 
-    public void SetAim(GameObject targetWarrior)
+    public void SetAim(GameObject aimWarrior)
     {
-        targetWarrior.TryGetComponent(out _tagetWarrior);
-        _warrior = targetWarrior.transform;
+        if (_victim != null)
+        {
+            _victim.GetComponent<IUnit>().DeselectUnit();
+        }
+        _victim = aimWarrior.transform;
     }
 
-    public void SetTarget(GameObject aimWarrior)
+    public void SetTarget(GameObject targetWarrior)
     {
-        aimWarrior.TryGetComponent(out _currentAim);
-        _victim = aimWarrior.transform;
+        if (_warrior != null)
+        {
+            _warrior.GetComponent<IUnit>().DeselectUnit();
+        }
+        _warrior = targetWarrior.transform;
     }
 
     public void AttackAction()
@@ -63,7 +66,6 @@ public class ActionController : MonoBehaviour
         {
             GameObject[] findedObjects = GameObject.FindGameObjectsWithTag("Player");
             int index = Random.Range(0, findedObjects.Length);
-            findedObjects[index].TryGetComponent(out _tagetWarrior);
             _warrior = findedObjects[index].transform;
         }
 
@@ -71,7 +73,6 @@ public class ActionController : MonoBehaviour
         {
             GameObject[] findedObjects = GameObject.FindGameObjectsWithTag("Enemy");
             int index = Random.Range(0, findedObjects.Length);
-            findedObjects[index].TryGetComponent(out _currentAim);
             _victim = findedObjects[index].transform;
         }
     }
@@ -81,16 +82,25 @@ public class ActionController : MonoBehaviour
         if (!StepController.Step && botStep)
         {
             botStep = false;
+            if (_warrior != null)
+            {
+                _warrior.GetComponent<IUnit>().DeselectUnit();
+                _warrior = null;
+            }
+
+            if (_victim != null)
+            {
+                _victim.GetComponent<IUnit>().DeselectUnit();
+                _victim = null;
+            }
+            _warrior = null;
+            _victim = null;
             StartCoroutine(EnemyStep(timeBetweenSteps));
         }
-        
-        Debug.Log(StepController.Step);
     }
 
     private IEnumerator EnemyStep(float time)
     {
-        _tagetWarrior = null;
-        _currentAim = null;
         yield return new WaitForSeconds(time);
         CheckSelected();
         MovingSelectedWarriors.Moving(_victim, _warrior);

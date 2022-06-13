@@ -34,6 +34,7 @@
             <e p="Base" t="Include">
               <e p="HealthIndicator.cs" t="Include" />
               <e p="Miner.cs" t="Include" />
+              <e p="Warrior.cs" t="Include" />
             </e>
             <e p="Controllers" t="Include">
               <e p="ActionController.cs" t="Include" />
